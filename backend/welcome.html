@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Waitless Backend API | Server</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan-50: #ecfeff;
+            --cyan-100: #cffafe;
+            --cyan-600: #0891b2;
+            --cyan-700: #0e7490;
+            --teal-400: #2dd4bf;
+            --teal-500: #14b8a6;
+            --teal-600: #0d9488;
+            --slate-50: #f8fafc;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1e293b;
+            --white: #fff;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--cyan-50), var(--slate-50) 60%, var(--cyan-50) 100%);
+            min-height: 100vh;
+            color: var(--slate-800);
+        }
+        main {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 5rem;
+            margin-bottom: 4rem;
+            padding: 1rem;
+            max-width: 40rem;
+            animation: fade-in 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(40px);}
+            to { opacity: 1; transform: none;}
+        }
+        .glow-bg {
+            position: absolute;
+            top: -2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6rem;
+            height: 6rem;
+            background: var(--cyan-100);
+            border-radius: 50%;
+            filter: blur(32px);
+            opacity: 0.7;
+            z-index: 0;
+        }
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--slate-800);
+            text-shadow: 0 4px 24px rgba(8,145,178,0.08);
+            position: relative;
+            z-index: 1;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--cyan-600), var(--teal-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .subtitle {
+            font-size: 1rem;
+            color: var(--cyan-700);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            z-index: 1;
+            position: relative;
+        }
+        .welcome-desc {
+            font-size: 1.15rem;
+            color: var(--slate-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+        .welcome-desc .highlight-cyan {
+            color: var(--cyan-600);
+            font-weight: 600;
+        }
+        .welcome-desc .highlight-teal {
+            color: var(--teal-600);
+            font-weight: 600;
+        }
+        .features-list {
+            text-align: left;
+            color: var(--slate-700);
+            margin-bottom: 2rem;
+            list-style: none;
+            padding: 0;
+        }
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+        .checkmark {
+            width: 1.25rem;
+            height: 1.25rem;
+            background: linear-gradient(135deg, var(--cyan-500, #06b6d4), var(--teal-400));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(8,145,178,0.12);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (min-width: 640px) {
+            .actions {
+                flex-direction: row;
+            }
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, var(--cyan-600), var(--teal-500));
+            color: var(--white);
+            font-weight: 600;
+            padding: 0.9rem 2.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 24px rgba(8,145,178,0.13);
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, var(--cyan-700), var(--teal-600));
+            transform: scale(1.05);
+        }
+        .btn-secondary {
+            background: var(--white);
+            border: 1.5px solid var(--cyan-200, #a5f3fc);
+            color: var(--cyan-700);
+            font-weight: 500;
+            padding: 0.9rem 2.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(8,145,178,0.06);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-secondary:hover {
+            background: var(--cyan-50);
+        }
+        /* Why Waitless section */
+        .why-section {
+            width: 100%;
+            max-width: 56rem;
+            padding: 1rem;
+            margin-bottom: 4rem;
+        }
+        .why-card {
+            background: rgba(255,255,255,0.8);
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 32px rgba(8,145,178,0.07);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+        .why-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--cyan-700);
+            margin-bottom: 0.5rem;
+        }
+        .why-desc {
+            color: var(--slate-600);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        /* Features grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            max-width: 56rem;
+            margin: 0 auto 3rem auto;
+            padding: 0 1rem;
+        }
+        @media (min-width: 700px) {
+            .features-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        .feature-card {
+            background: var(--white);
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 24px rgba(8,145,178,0.09);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.18s;
+        }
+        .feature-card:hover {
+            transform: translateY(-6px) scale(1.03);
+        }
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.7rem;
+            color: var(--cyan-600);
+        }
+        .feature-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--slate-800);
+        }
+        .feature-desc {
+            color: var(--slate-600);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="welcome-section">
+            <div style="position:relative; width:100%;">
+                <span class="glow-bg"></span>
+                <h1 class="welcome-title">
+                    <span class="gradient-text">Waitless</span> Backend API
+                </h1>
+                <div class="subtitle">Backend Server • Live & Running</div>
+            </div>
+            <p class="welcome-desc">
+                Welcome to the <span class="highlight-cyan">Waitless Backend Server</span>! This RESTful API powers the queue management system, providing <span class="highlight-teal">real-time data</span> and seamless integration for queue monitoring applications.
+            </p>
+            <ul class="features-list">
+                <li>
+                    <span class="checkmark">✓</span>
+                    RESTful API endpoints for queue management
+                </li>
+                <li>
+                    <span class="checkmark">✓</span>
+                    Real-time data processing and updates
+                </li>
+                <li>
+                    <span class="checkmark">✓</span>
+                    Scalable backend architecture
+                </li>
+            </ul>
+            <div class="actions">
+                <a class="btn-secondary" href="https://github.com/raghulkannan-s/live-queue-notifier" target="_blank" rel="noopener noreferrer">
+                    🚀 View on GitHub
+                </a>
+            </div>
+        </section>
+        <section class="why-section">
+            <div class="why-card">
+                <div>
+                    <div class="why-title">About This Backend</div>
+                    <div class="why-desc">
+                        This backend server was built to provide robust API endpoints for the Waitless queue management system. It handles real-time data processing, queue tracking, and serves as the foundation for client applications.
+                    </div>
+                    <div class="why-desc">
+                        The server is designed with scalability and performance in mind, ensuring reliable service for queue monitoring applications.
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="features-grid" id="features">
+            <!-- Features will be injected by JS -->
+        </section>
+    </main>
+    <script>
+        // Features data
+        const features = [
+            {
+                icon: "🔌",
+                title: "RESTful API",
+                desc: "Clean, well-documented API endpoints for seamless integration with frontend applications."
+            },
+            {
+                icon: "⚡",
+                title: "Real-time Processing",
+                desc: "Live data processing and WebSocket support for instant queue updates."
+            },
+            {
+                icon: "🛡️",
+                title: "Secure & Scalable",
+                desc: "Built with security best practices and designed to handle growing user demands."
+            }
+        ];
+        // Render features
+        const grid = document.getElementById('features');
+        features.forEach(f => {
+            const card = document.createElement('div');
+            card.className = 'feature-card';
+            card.innerHTML = `
+                <div class="feature-icon">${f.icon}</div>
+                <div class="feature-title">${f.title}</div>
+                <div class="feature-desc">${f.desc}</div>
+            `;
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+</html>
